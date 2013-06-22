@@ -19,3 +19,13 @@ body {
 	height: 800px;
 	width:100%;
 }
+
+#cm_map img {
+	max-width:none;
+}
+
+#cm_map label {
+	width:auto;
+	display:inline;
+}
+
