@@ -179,6 +179,9 @@ function cm_loadMapJSON(json) {
 
   for (var i = 0; i < json.feed.entry.length; i++) {
     var entry = json.feed.entry[i];
+
+    var price_info = "";
+
     if(entry["gsx$" + param_latColumn].$t) {
 
       console.log(entry["gsx$" + param_shopname].$t);
@@ -187,16 +190,13 @@ function cm_loadMapJSON(json) {
       var lng = parseFloat(entry["gsx$" + param_lngColumn].$t);
       var point = new GLatLng(lat,lng);
 
-      // Contents of the popup
+      // Title of the popup
       var html = "<div style='font-size:12px'>";
       html += "<strong>" 
                   + entry["gsx$"+param_shopname].$t 
                   + "</strong>";
-      // if(entry["gsx$" + param_descriptionColumn]) {
-      //   html += "<br/>" 
-      //           + entry["gsx$"+param_descriptionColumn].$t;
-      // }
 
+      // Determines the item type that is being displayed (the noun)
       var item_type = "";
       if(entry["gsx$" + param_airpurifierorn95mask].$t === "N95 Mask") {
         item_type = " mask(s)";
@@ -205,19 +205,19 @@ function cm_loadMapJSON(json) {
         item_type = " air purifier(s)";
       }  
       
-
-
+      // Fills out the contents of the popup
       if(entry["gsx$" + param_address]) {
         html += "<br/>" 
                 + "<strong>Address: </strong>" +  entry["gsx$"+param_address].$t;
       }
       if(entry["gsx$" + param_price]) {
-        html += "<br/>" 
+        price_info += "<br/>" 
                 + "<strong>Price: </strong>" + entry["gsx$"+param_price].$t ;
       }
       if(entry["gsx$" + param_quantity]) {
-        html += " for " +entry["gsx$"+param_quantity].$t + item_type;
+        price_info += " for " +entry["gsx$"+param_quantity].$t + item_type;
       }
+      html += price_info;
 
       if(entry["gsx$" + param_unitprice]) {
         html += "<br/>" 
@@ -227,9 +227,6 @@ function cm_loadMapJSON(json) {
         html += "<br/><br/>" 
                 + "<strong>Last Updated: </strong>" + entry["gsx$"+param_timestamp].$t;
       }
-
-
-
 
       html += "</div>";
 
@@ -249,6 +246,11 @@ function cm_loadMapJSON(json) {
     
       // Sidebar
       if(param_useSidebar == true) {
+        var markerDiv = document.createElement("div");
+        markerDiv.setAttribute("onclick","javascript:cm_markerClicked('" + i +"')");
+        markerDiv.setAttribute("style", "cursor:pointer;");
+        markerDiv.className = "sidebar_entry";
+
         var markerA = document.createElement("a");
         markerA.setAttribute("href","javascript:cm_markerClicked('" + i +"')");
         markerA.style.color = "#000000";
@@ -257,10 +259,20 @@ function cm_loadMapJSON(json) {
           sidebarText += rank + ") ";
         } 
         sidebarText += label;
-        markerA.appendChild(document.createTextNode(sidebarText));
-        sidebarDIV.appendChild(markerA);
-        sidebarDIV.appendChild(document.createElement("br"));
-        sidebarDIV.appendChild(document.createElement("br"));
+        markerA.appendChild(document.createTextNode(sidebarText)); 
+
+
+
+        markerDiv.appendChild(markerA);
+        // markerDiv.appendChild(document.createElement("br")); 
+        markerDiv.innerHTML = markerDiv.innerHTML += price_info;
+
+        // markerDiv.append("hello");
+
+
+        markerDiv.appendChild(document.createElement("br")); 
+
+        sidebarDIV.appendChild(markerDiv);
       } 
     }
   }

@@ -33,3 +33,7 @@ body {
 	display:inline;
 }
 
+.sidebar_entry {
+	padding: 10px 10px;
+	border-bottom: 1px dotted;
+}
