@@ -2,19 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Crowdsourcing N95 Masks</title>
+    <title>N95 Mask Finder</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link href="assets/css/bootstrap.css" rel="stylesheet">
-    <style>
-      body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
-    </style>
     <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link href="assets/css/custom.css" rel="stylesheet">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -39,12 +35,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#">Crowdsourcing N95 Masks</a>
+          <a class="brand" href="#">N95 Mask Finder</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
+<!--               <li class="active"><a href="#">Home</a></li>
               <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li><a href="#contact">Contact</a></li> -->
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -54,7 +50,7 @@
     <div class="container">
       <div>
         <table id="cm_mapTABLE"> <tbody> <tr id="cm_mapTR">
-          <td> <div id="cm_map" style="width:500px; height:500px"></div> </td>
+          <td> <div id="cm_map"></div> </td>
         </tr> </tbody></table>
       </div>
 
@@ -121,7 +117,7 @@ function cm_load() {
     cm_map = new GMap2(document.getElementById("cm_map"));
     cm_map.addControl(new GLargeMapControl());
     cm_map.addControl(new GMapTypeControl());
-    cm_map.setCenter(new GLatLng( 43.907787,-79.359741), 2);
+    cm_map.setCenter(new GLatLng(1.352083,103.819836), 2);
     cm_getJSON();
   } else {
     alert("Sorry, the Google Maps API is not compatible with this browser");
