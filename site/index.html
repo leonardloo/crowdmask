@@ -59,19 +59,6 @@
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="assets/js/jquery.js"></script>
-    <script src="assets/js/bootstrap-transition.js"></script>
-    <script src="assets/js/bootstrap-alert.js"></script>
-    <script src="assets/js/bootstrap-modal.js"></script>
-    <script src="assets/js/bootstrap-dropdown.js"></script>
-    <script src="assets/js/bootstrap-scrollspy.js"></script>
-    <script src="assets/js/bootstrap-tab.js"></script>
-    <script src="assets/js/bootstrap-tooltip.js"></script>
-    <script src="assets/js/bootstrap-popover.js"></script>
-    <script src="assets/js/bootstrap-button.js"></script>
-    <script src="assets/js/bootstrap-collapse.js"></script>
-    <script src="assets/js/bootstrap-carousel.js"></script>
-    <script src="assets/js/bootstrap-typeahead.js"></script>
 
   </body>
 </html>
@@ -108,6 +95,16 @@ var param_rankColumn = "";
 var param_iconType = "red";
 var param_iconOverType = "orange";
 
+// Google Docs Structured Data
+var param_address = "address";
+var param_price = "price";
+var param_quantity = "quantity";
+var param_timestamp = "timestamp";
+var param_shopname = "shopname";
+var param_unitprice = "unitprice";
+var param_hasstock = "hasstock";
+var param_airpurifierorn95mask = "airpurifierorn95mask";
+
 /**
  * Loads map and calls function to load in worksheet data.
  */
@@ -115,9 +112,11 @@ function cm_load() {
   if (GBrowserIsCompatible()) {
     // create the map
     cm_map = new GMap2(document.getElementById("cm_map"));
-    cm_map.addControl(new GLargeMapControl());
-    cm_map.addControl(new GMapTypeControl());
-    cm_map.setCenter(new GLatLng(1.352083,103.819836), 2);
+    cm_map.setCenter(new GLatLng(1.342083,103.859836), 2);
+    cm_map.setZoom(12);
+    cm_map.setUIToDefault();
+    // cm_map.addControl(new GLargeMapControl());
+    // cm_map.addControl(new GMapTypeControl());
     cm_getJSON();
   } else {
     alert("Sorry, the Google Maps API is not compatible with this browser");
@@ -154,6 +153,7 @@ function cm_sortRows(rowA, rowB) {
  * @param {JSON} json Worksheet feed
  */       
 function cm_loadMapJSON(json) {
+  console.log(json)
   var usingRank = false;
 
   if(param_useSidebar == true) {
@@ -163,7 +163,7 @@ function cm_loadMapJSON(json) {
     var sidebarDIV = document.createElement("div");
     sidebarDIV.id = "cm_sidebarDIV";
     sidebarDIV.style.overflow = "auto";
-    sidebarDIV.style.height = "800px";
+    sidebarDIV.style.height = "100%";
     sidebarDIV.style.fontSize = "11px";
     sidebarDIV.style.color = "#000000";
     sidebarTD.appendChild(sidebarDIV);
@@ -179,22 +179,66 @@ function cm_loadMapJSON(json) {
 
   for (var i = 0; i < json.feed.entry.length; i++) {
     var entry = json.feed.entry[i];
-    if(entry["gsx$" + param_latColumn]) {
+    if(entry["gsx$" + param_latColumn].$t) {
+
+      console.log(entry["gsx$" + param_shopname].$t);
+
       var lat = parseFloat(entry["gsx$" + param_latColumn].$t);
       var lng = parseFloat(entry["gsx$" + param_lngColumn].$t);
       var point = new GLatLng(lat,lng);
+
+      // Contents of the popup
       var html = "<div style='font-size:12px'>";
-      html += "<strong>" + entry["gsx$"+param_titleColumn].$t 
-              + "</strong>";
+      html += "<strong>" 
+                  + entry["gsx$"+param_shopname].$t 
+                  + "</strong>";
+      // if(entry["gsx$" + param_descriptionColumn]) {
+      //   html += "<br/>" 
+      //           + entry["gsx$"+param_descriptionColumn].$t;
+      // }
+
+      var item_type = "";
+      if(entry["gsx$" + param_airpurifierorn95mask].$t === "N95 Mask") {
+        item_type = " mask(s)";
+      }      
+      else if (entry["gsx$" + param_airpurifierorn95mask].$t ==="Air purifier") {
+        item_type = " air purifier(s)";
+      }  
+      
+
+
+      if(entry["gsx$" + param_address]) {
+        html += "<br/>" 
+                + "<strong>Address: </strong>" +  entry["gsx$"+param_address].$t;
+      }
+      if(entry["gsx$" + param_price]) {
+        html += "<br/>" 
+                + "<strong>Price: </strong>" + entry["gsx$"+param_price].$t ;
+      }
+      if(entry["gsx$" + param_quantity]) {
+        html += " for " +entry["gsx$"+param_quantity].$t + item_type;
+      }
+
+      if(entry["gsx$" + param_unitprice]) {
+        html += "<br/>" 
+                 + "<strong>Calculated Unit Price: </strong>" + entry["gsx$"+param_unitprice].$t;
+      }
+      if(entry["gsx$" + param_timestamp]) {
+        html += "<br/><br/>" 
+                + "<strong>Last Updated: </strong>" + entry["gsx$"+param_timestamp].$t;
+      }
+
+
+
+
+      html += "</div>";
+
+      // For the mouseover stuff
       var label = entry["gsx$"+param_titleColumn].$t;
       var rank = 0;
       if(usingRank && entry["gsx$" + param_rankColumn]) {
         rank = parseInt(entry["gsx$"+param_rankColumn].$t);
       }
-      if(entry["gsx$" + param_descriptionColumn]) {
-        html += "<br/>" + entry["gsx$"+param_descriptionColumn].$t;
-      }
-      html += "</div>";
 
       // create the marker
       var marker = cm_createMarker(point,label,html,rank);
@@ -203,6 +247,7 @@ function cm_loadMapJSON(json) {
       cm_mapHTMLS.push(html);
       bounds.extend(point);
     
+      // Sidebar
       if(param_useSidebar == true) {
         var markerA = document.createElement("a");
         markerA.setAttribute("href","javascript:cm_markerClicked('" + i +"')");
@@ -220,8 +265,8 @@ function cm_loadMapJSON(json) {
     }
   }
 
-  cm_map.setZoom(cm_map.getBoundsZoomLevel(bounds));
-  cm_map.setCenter(bounds.getCenter());
+  // cm_map.setZoom(cm_map.getBoundsZoomLevel(bounds));
+  // cm_map.setCenter(bounds.getCenter());
 }
 
 /**
