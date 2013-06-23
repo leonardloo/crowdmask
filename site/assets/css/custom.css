@@ -9,6 +9,13 @@ body {
 	width:98%;
 }
 
+.more-info {
+	display:inline-block;
+	color: #999;
+	vertical-align:-4px;
+	padding-left:30px;
+}
+
 .container {
 	width:100%;
 	height:100%;
