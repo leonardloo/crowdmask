@@ -42,7 +42,7 @@
             </ul>
             <button class="btn btn-danger" type="button" onclick="window.open('https://docs.google.com/forms/d/1oKeUZOTo_YDTtRX4zLwImjrI9jM6opvIOFX2xNiDLO8/viewform');">Add a location</button>
             <div class="more-info">
-              Built based on <a href="https://docs.google.com/forms/d/1oKeUZOTo_YDTtRX4zLwImjrI9jM6opvIOFX2xNiDLO8/viewform">this crowdsourcing spreadsheet</a>
+              Built based on <a href="https://docs.google.com/forms/d/1oKeUZOTo_YDTtRX4zLwImjrI9jM6opvIOFX2xNiDLO8/viewform">this crowdsourcing spreadsheet</a>. Are you an engineer? <a href="https://github.com/eidus/crowdmask#known-bugsfaults">We need help!</a>
             </div>
           </div><!--/.nav-collapse -->
         </div>
@@ -112,6 +112,7 @@ var param_shopname = "shopname";
 var param_unitprice = "unitprice";
 var param_hasstock = "hasstock";
 var param_airpurifierorn95mask = "airpurifierorn95mask";
+var param_comment = "comment";
 
 /**
  * Loads map and calls function to load in worksheet data.
@@ -231,6 +232,12 @@ function cm_loadMapJSON(json) {
         html += "<br/>" 
                  + "<strong>Calculated Unit Price: </strong>" + entry["gsx$"+param_unitprice].$t;
       }
+
+      if(entry["gsx$" + param_comment]) {
+        html += "<br/><br/>" 
+                + "<strong>Comment:</strong><br/>" + entry["gsx$"+param_comment].$t;
+      }
+
       if(entry["gsx$" + param_timestamp]) {
         html += "<br/><br/>" 
                 + "<strong>Last Updated: </strong>" + entry["gsx$"+param_timestamp].$t;
