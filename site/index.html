@@ -183,14 +183,20 @@ function cm_loadMapJSON(json) {
 
   if(json.feed.entry[0]["gsx$" + param_rankColumn]) {
     usingRank = true;
+    // console.log("frustrated");
     json.feed.entry.sort(cm_sortRows);
   }
 
+  // num_valid_latlong_entries is the number of entries with valid lat_longs. Use this instead of ALL entries, indexed by i. num_valid_latlong_entries < i.
+  var num_valid_latlong_entries = 0;
+
+  // i is the variable iterating through the JSON entries
   for (var i = 0; i < json.feed.entry.length; i++) {
     var entry = json.feed.entry[i];
 
     var price_info = "";
 
+      
     if(entry["gsx$" + param_latColumn].$t) {
 
       console.log(entry["gsx$" + param_shopname].$t);
@@ -262,12 +268,12 @@ function cm_loadMapJSON(json) {
       // Sidebar
       if(param_useSidebar == true) {
         var markerDiv = document.createElement("div");
-        markerDiv.setAttribute("onclick","javascript:cm_markerClicked('" + i +"')");
+        markerDiv.setAttribute("onclick","javascript:cm_markerClicked('" + num_valid_latlong_entries +"')");
         markerDiv.setAttribute("style", "cursor:pointer;");
         markerDiv.className = "sidebar_entry";
 
         var markerA = document.createElement("a");
-        markerA.setAttribute("href","javascript:cm_markerClicked('" + i +"')");
+        markerA.setAttribute("href","javascript:cm_markerClicked('" + num_valid_latlong_entries +"')");
         markerA.style.color = "#000000";
         var sidebarText= "";
         if(usingRank) {
@@ -288,7 +294,9 @@ function cm_loadMapJSON(json) {
         markerDiv.appendChild(document.createElement("br")); 
 
         sidebarDIV.appendChild(markerDiv);
-      } 
+      }
+
+      num_valid_latlong_entries++; 
     }
   }
 
