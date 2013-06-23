@@ -228,8 +228,8 @@ function cm_loadMapJSON(json) {
       if(entry["gsx$" + param_price]) {
         price_info += "<br/>" 
                 + "<strong>Price: </strong>";
-  	 if (entry["gsx$"+param_price].$t == 0) price_info += "TBC " + entry["gsx$"+param_price].$t;
-		 else price_info += entry["gsx$"+param_price].$t;
+     if (entry["gsx$"+param_price].$t == 0) price_info += "TBC " + entry["gsx$"+param_price].$t;
+     else price_info += entry["gsx$"+param_price].$t;
       }
       if(entry["gsx$" + param_quantity]) {
         price_info += " for " +entry["gsx$"+param_quantity].$t + item_type;
